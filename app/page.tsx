@@ -1,131 +1,103 @@
 'use client';
 
-import { Container, Title, Text, Button, Stack, Card, Group, Badge, Box } from '@mantine/core';
-import { IconFileText, IconChartBar, IconTarget, IconSparkles } from '@tabler/icons-react';
+import { Box, Button, Container, Group, Paper, Stack, Text, Title } from '@mantine/core';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
+
+const steps = [
+  {
+    n: '1',
+    title: 'Upload your resume',
+    description: 'PDF drag & drop',
+  },
+  {
+    n: '2',
+    title: 'Add a job description',
+    description: 'Optional — paste JD text',
+  },
+  {
+    n: '3',
+    title: 'Get your analysis',
+    description: 'Score, suggestions, match %',
+  },
+] as const;
 
 export default function Home() {
   return (
     <>
       <Navbar user={null} />
-      <Container size="lg" py={80}>
-        <Stack align="center" gap={60}>
-          {/* Hero Section */}
-          <Stack align="center" gap="xl" style={{ textAlign: 'center' }}>
-            <Badge
-              size="lg"
-              variant="gradient"
-              gradient={{ from: 'blue', to: 'cyan', deg: 90 }}
-              leftSection={<IconSparkles size={16} />}
-            >
-              AI-Powered Resume Analysis
-            </Badge>
 
-            <Title
-              order={1}
-              size={56}
-              fw={800}
-              style={{
-                background: 'linear-gradient(135deg, #228be6 0%, #15aabf 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                letterSpacing: '-0.02em',
-              }}
-            >
-              Resume Reviewer AI
-            </Title>
+      <Box component="main">
+        <Container size="lg" py={{ base: 100, md: 120 }} px="md">
+          <Stack gap={100} align="stretch">
+            <Stack gap="xl" align="flex-start" maw={640}>
+              <Title
+                order={1}
+                fz={{ base: 36, sm: 44, md: 52 }}
+                fw={700}
+                lh={1.15}
+                c="dark.8"
+                style={{ letterSpacing: '-0.03em' }}
+              >
+                Know exactly what to fix on your resume
+              </Title>
+              <Text size="lg" c="dimmed" lh={1.65} maw={560}>
+                In about 30 seconds you get a clear score, line-by-line suggestions, and—if you paste a
+                job description—a match readout so you see what&apos;s missing before you hit apply.
+              </Text>
+              <Stack gap="sm" mt="md">
+                <Button
+                  component={Link}
+                  href="/auth/signin"
+                  size="lg"
+                  radius="md"
+                  color="brand"
+                  variant="filled"
+                >
+                  Analyze My Resume
+                </Button>
+                <Text size="sm" c="dimmed">
+                  Free to use · No credit card · Powered by Gemini
+                </Text>
+              </Stack>
+            </Stack>
 
-            <Text size="xl" c="dimmed" maw={650} style={{ lineHeight: 1.6 }}>
-              Get instant AI-powered feedback on your resume. Improve your chances with personalized suggestions and job description matching powered by Google Gemini.
-            </Text>
-
-            <Button
-              component={Link}
-              href="/auth/signin"
-              size="xl"
-              mt="md"
-              variant="gradient"
-              gradient={{ from: 'blue', to: 'cyan', deg: 90 }}
-              style={{ fontSize: '1.1rem', padding: '12px 48px' }}
-            >
-              Get Started - Sign in with Google
-            </Button>
+            <Stack gap="xl">
+              <Title order={2} fz={{ base: 22, sm: 26 }} fw={600} c="dark.7">
+                How it works
+              </Title>
+              <Group grow align="flex-start" gap="xl" wrap="wrap">
+                {steps.map((step) => (
+                  <Stack key={step.n} gap="xs" maw={{ base: '100%', sm: 360 }} style={{ flex: '1 1 12.5rem' }}>
+                    <Text fz={48} fw={800} lh={1} c="brand.6" style={{ letterSpacing: '-0.04em' }}>
+                      {step.n}
+                    </Text>
+                    <Text fw={600} size="md" c="dark.8">
+                      {step.title}
+                    </Text>
+                    <Text size="sm" c="dimmed" lh={1.55}>
+                      {step.description}
+                    </Text>
+                  </Stack>
+                ))}
+              </Group>
+            </Stack>
           </Stack>
+        </Container>
 
-          {/* Features Section */}
-          <Box w="100%" maw={900}>
-            <Title order={2} ta="center" mb={40} fw={700} size={36}>
-              Why Choose Resume Reviewer?
-            </Title>
-
-            <Group grow align="stretch" gap="lg">
-              <Card shadow="md" padding="xl" radius="md" style={{ border: '1px solid #e9ecef' }}>
-                <Stack align="center" gap="md" style={{ textAlign: 'center' }}>
-                  <Box
-                    style={{
-                      background: 'linear-gradient(135deg, #228be6 0%, #15aabf 100%)',
-                      borderRadius: '50%',
-                      padding: '16px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <IconFileText size={32} color="white" />
-                  </Box>
-                  <Text fw={700} size="lg">AI Resume Analysis</Text>
-                  <Text size="sm" c="dimmed" style={{ lineHeight: 1.6 }}>
-                    Upload your resume and get instant AI feedback on formatting, content structure, and overall impact
-                  </Text>
-                </Stack>
-              </Card>
-
-              <Card shadow="md" padding="xl" radius="md" style={{ border: '1px solid #e9ecef' }}>
-                <Stack align="center" gap="md" style={{ textAlign: 'center' }}>
-                  <Box
-                    style={{
-                      background: 'linear-gradient(135deg, #15aabf 0%, #0ca678 100%)',
-                      borderRadius: '50%',
-                      padding: '16px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <IconTarget size={32} color="white" />
-                  </Box>
-                  <Text fw={700} size="lg">JD Matching</Text>
-                  <Text size="sm" c="dimmed" style={{ lineHeight: 1.6 }}>
-                    Compare your resume against job descriptions to see compatibility and missing keywords
-                  </Text>
-                </Stack>
-              </Card>
-
-              <Card shadow="md" padding="xl" radius="md" style={{ border: '1px solid #e9ecef' }}>
-                <Stack align="center" gap="md" style={{ textAlign: 'center' }}>
-                  <Box
-                    style={{
-                      background: 'linear-gradient(135deg, #0ca678 0%, #fab005 100%)',
-                      borderRadius: '50%',
-                      padding: '16px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <IconChartBar size={32} color="white" />
-                  </Box>
-                  <Text fw={700} size="lg">Smart Suggestions</Text>
-                  <Text size="sm" c="dimmed" style={{ lineHeight: 1.6 }}>
-                    Get actionable, personalized recommendations to enhance your resume and stand out
-                  </Text>
-                </Stack>
-              </Card>
-            </Group>
-          </Box>
-        </Stack>
-      </Container>
+        <Paper radius={0} bg="brand.0" py={{ base: 64, md: 80 }} mt={{ base: 40, md: 60 }}>
+          <Container size="sm" px="md">
+            <Stack gap="lg" align="center" ta="center">
+              <Text size="lg" fw={500} c="dark.7">
+                Ready to improve your resume?
+              </Text>
+              <Button component={Link} href="/auth/signin" size="md" color="brand" variant="filled">
+                Get Started
+              </Button>
+            </Stack>
+          </Container>
+        </Paper>
+      </Box>
     </>
   );
 }
