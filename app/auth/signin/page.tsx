@@ -49,8 +49,8 @@ export default function SignInPage() {
 
             <Button
               size="lg"
-              variant="gradient"
-              gradient={{ from: 'blue', to: 'cyan', deg: 90 }}
+              variant="filled"
+              color="brand"
               leftSection={<IconBrandGoogle size={20} />}
               onClick={handleGoogleSignIn}
               fullWidth
