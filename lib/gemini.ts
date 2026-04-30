@@ -1,7 +1,13 @@
 import Groq from 'groq-sdk';
 import type { AnalysisResult } from '@/types';
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY! });
+let groq: Groq;
+function getGroqClient() {
+  if (!groq) {
+    groq = new Groq({ apiKey: process.env.GROQ_API_KEY! });
+  }
+  return groq;
+}
 
 const SYSTEM_PROMPT = `You are an expert resume reviewer and career advisor. Analyze the given resume text and provide detailed, actionable feedback.
 
@@ -35,7 +41,7 @@ export async function analyzeResume(
     userPrompt += `\n\nHere is the job description to match against:\n\n${jdText}`;
   }
 
-  const response = await groq.chat.completions.create({
+  const response = await getGroqClient().chat.completions.create({
     model: 'llama-3.3-70b-versatile',
     messages: [
       { role: 'system', content: SYSTEM_PROMPT },
