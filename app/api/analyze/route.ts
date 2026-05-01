@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { analyzeResume } from '@/lib/gemini';
-import { PDFParse } from 'pdf-parse';
+import pdf from 'pdf-parse';
 
 export async function POST(request: Request) {
   try {
@@ -61,8 +61,7 @@ export async function POST(request: Request) {
     const buffer = Buffer.from(arrayBuffer);
 
     // Extract text from PDF
-    const parser = new PDFParse({ data: buffer });
-    const pdfData = await parser.getText();
+    const pdfData = await pdf(buffer);
     const resumeText = pdfData.text;
 
     if (!resumeText.trim()) {
