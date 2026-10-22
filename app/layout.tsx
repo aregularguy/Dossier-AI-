@@ -5,6 +5,7 @@ import "@mantine/notifications/styles.css";
 import "@mantine/dropzone/styles.css";
 import "./globals.css";
 import Providers from "@/components/Providers";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Resume Reviewer AI",
@@ -23,7 +24,10 @@ export default function RootLayout({
       </head>
       <body>
         <Providers>
-          {children}
+          <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+            {children}
+            <Footer />
+          </div>
         </Providers>
       </body>
     </html>
