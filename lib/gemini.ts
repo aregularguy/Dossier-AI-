@@ -1,5 +1,9 @@
 import Groq from 'groq-sdk';
+import { z } from 'zod';
 import type { AnalysisResult } from '@/types';
+
+// Groq retires model IDs without notice, so allow an override without a redeploy.
+const MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
 
 let groq: Groq;
 function getGroqClient() {
@@ -31,6 +35,26 @@ Guidelines:
 
 IMPORTANT: Return ONLY valid JSON, no markdown, no code fences.`;
 
+/** Thrown when the model returns JSON that does not match the expected shape. */
+export class InvalidAnalysisError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'InvalidAnalysisError';
+  }
+}
+
+// The model is told to return this shape, but it is not guaranteed to.
+// Parsing here means a bad response is thrown and retried by the caller
+// instead of reaching the results page and crashing on `.map`.
+const AnalysisResultSchema = z.object({
+  score: z.number().min(0).max(100),
+  strengths: z.array(z.string()).default([]),
+  improvements: z.array(z.string()).default([]),
+  suggestions: z.array(z.string()).default([]),
+  jd_match: z.number().min(0).max(100).nullable().default(null),
+  overall_feedback: z.string().default(''),
+});
+
 export async function analyzeResume(
   resumeText: string,
   jdText?: string
@@ -42,7 +66,7 @@ export async function analyzeResume(
   }
 
   const response = await getGroqClient().chat.completions.create({
-    model: 'llama-3.3-70b-versatile',
+    model: MODEL,
     messages: [
       { role: 'system', content: SYSTEM_PROMPT },
       { role: 'user', content: userPrompt },
@@ -52,6 +76,11 @@ export async function analyzeResume(
   });
 
   const text = response.choices[0]?.message?.content ?? '';
-  const result: AnalysisResult = JSON.parse(text);
-  return result;
+
+  try {
+    return AnalysisResultSchema.parse(JSON.parse(text)) as AnalysisResult;
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : String(err);
+    throw new InvalidAnalysisError(`Model returned an unusable analysis: ${detail}`);
+  }
 }

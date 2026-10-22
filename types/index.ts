@@ -23,7 +23,7 @@ export interface AnalysisResult {
   score: number;
   strengths: string[];
   improvements: string[];
-  jd_match?: number;
+  jd_match?: number | null;
   suggestions: string[];
   overall_feedback: string;
 }
