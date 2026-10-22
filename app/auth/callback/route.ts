@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { safeNextPath } from '@/lib/safe-next';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
@@ -10,6 +11,7 @@ export async function GET(request: Request) {
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  // Redirect to dashboard after successful sign in
-  return NextResponse.redirect(new URL('/dashboard', requestUrl.origin));
+  // Send them back where they were headed, defaulting to the dashboard.
+  const next = safeNextPath(requestUrl.searchParams.get('next'));
+  return NextResponse.redirect(new URL(next, requestUrl.origin));
 }
