@@ -8,6 +8,8 @@ class Settings(BaseSettings):
 
     # Groq
     groq_api_key: str
+    # Groq retires model IDs without notice; override via GROQ_MODEL.
+    groq_model: str = "openai/gpt-oss-120b"
 
     # Embedding model
     embedding_model: str = "all-MiniLM-L6-v2"

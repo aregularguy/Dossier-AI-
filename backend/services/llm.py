@@ -6,7 +6,7 @@ from config import settings
 class LLMService:
     def __init__(self):
         self.client = Groq(api_key=settings.groq_api_key)
-        self.model = "llama-3.3-70b-versatile"
+        self.model = settings.groq_model
 
     def generate_answer(self, question: str, context_chunks: list[dict]) -> str:
         """Generate an answer using retrieved context chunks."""
