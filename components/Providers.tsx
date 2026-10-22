@@ -6,53 +6,51 @@ import {
   type MantineColorsTuple,
 } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
+import { cardLine, radiusCard } from '@/lib/design';
 
-const brand: MantineColorsTuple = [
-  '#eef2ff',
-  '#e0e7ff',
-  '#c7d2fe',
-  '#a5b4fc',
-  '#818cf8',
-  '#5b52e8',
-  '#4338ca',
-  '#3730a3',
-  '#312e81',
-  '#1e1b4b',
+// Authored/dark surfaces. Shade 9 is #101217 — the primary shade, so a filled
+// Button is ink with white text.
+const inkScale: MantineColorsTuple = [
+  '#F2F4F6',
+  '#E3E8EC',
+  '#C6CED5',
+  '#A8ADBB',
+  '#7E8597',
+  '#565B69',
+  '#3A3F4B',
+  '#262A33',
+  '#191C23',
+  '#101217',
 ];
 
-const accent: MantineColorsTuple = [
-  '#fffbeb',
-  '#fef3c7',
-  '#fde68a',
-  '#fcd34d',
-  '#fbbf24',
-  '#f59e0b',
-  '#d97706',
-  '#b45309',
-  '#92400e',
-  '#78350f',
+// The single accent. Shade 4 is #4FD1E8 and is only used on ink surfaces.
+const cyanScale: MantineColorsTuple = [
+  '#E8FBFE',
+  '#CFF6FB',
+  '#A3EDF6',
+  '#74E0EF',
+  '#4FD1E8',
+  '#2FC2DC',
+  '#1FA9C2',
+  '#17879B',
+  '#126B7B',
+  '#0C4F5B',
 ];
 
 const theme = createTheme({
-  primaryColor: 'brand',
-  fontFamily:
-    'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif',
+  primaryColor: 'ink',
+  primaryShade: { light: 9, dark: 9 },
+  fontFamily: '"DM Sans", -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif',
   fontFamilyMonospace: 'Monaco, Courier, monospace',
   headings: {
-    fontFamily:
-      'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif',
-    fontWeight: '700',
+    fontFamily: '"Space Grotesk", "DM Sans", sans-serif',
+    fontWeight: '600',
   },
   colors: {
-    brand,
-    accent,
+    ink: inkScale,
+    cyan: cyanScale,
   },
   defaultRadius: 'lg',
-  defaultGradient: {
-    deg: 125,
-    from: 'brand.6',
-    to: 'accent.4',
-  },
   components: {
     Button: {
       defaultProps: {
@@ -74,11 +72,20 @@ const theme = createTheme({
         radius: 'md',
       },
     },
+    Paper: {
+      defaultProps: {
+        radius: radiusCard,
+        shadow: 'none',
+      },
+    },
     Card: {
       defaultProps: {
-        radius: 'lg',
-        shadow: 'sm',
+        radius: radiusCard,
+        shadow: 'none',
         withBorder: true,
+      },
+      styles: {
+        root: { borderColor: cardLine },
       },
     },
   },
