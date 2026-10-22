@@ -1,8 +1,9 @@
-import { Container, Title, Text, Stack } from '@mantine/core';
-import { createClient } from '@/lib/supabase/server';
+import { Container, Stack, Text, Title } from '@mantine/core';
 import { redirect } from 'next/navigation';
-import Navbar from '@/components/Navbar';
 import AnalyzeForm from '@/components/AnalyzeForm';
+import Navbar from '@/components/Navbar';
+import { ink, textDimmed } from '@/lib/design';
+import { createClient } from '@/lib/supabase/server';
 
 export default async function AnalyzePage() {
   const supabase = await createClient();
@@ -15,29 +16,31 @@ export default async function AnalyzePage() {
     redirect('/auth/signin');
   }
 
-  const userName = user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0];
-  const userEmail = user.email;
-  const userAvatar = user.user_metadata?.avatar_url || user.user_metadata?.picture;
+  const userName =
+    user.user_metadata?.full_name ||
+    user.user_metadata?.name ||
+    user.email?.split('@')[0];
 
   return (
     <>
       <Navbar
         user={{
           name: userName,
-          email: userEmail,
-          avatar: userAvatar,
+          email: user.email,
+          avatar: user.user_metadata?.avatar_url || user.user_metadata?.picture,
         }}
       />
-      <Container size="sm" py={56} px="md">
-        <Stack gap="xl">
-          <div>
-            <Title order={3} fw={600} c="dark.8">
-              Analyze resume
+      <Container size="sm" py={{ base: 32, md: 48 }} px="md">
+        <Stack gap={28}>
+          <Stack gap={6}>
+            <Title order={1} fz={{ base: 26, sm: 32 }} fw={600} c={ink}>
+              New analysis
             </Title>
-            <Text size="sm" c="dimmed" mt={4}>
-              Upload your resume and optionally paste a job description for a match score.
+            <Text fz={14} c={textDimmed} lh={1.6}>
+              Two steps. The resume is required; the job description is what makes
+              the report specific to the role.
             </Text>
-          </div>
+          </Stack>
           <AnalyzeForm />
         </Stack>
       </Container>

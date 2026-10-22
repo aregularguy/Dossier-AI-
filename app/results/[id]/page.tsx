@@ -48,6 +48,8 @@ export default async function ResultsPage({
       <ResultsDisplay
         filename={analysis.resume_filename}
         result={analysis.analysis_result}
+        jdText={analysis.jd_text}
+        createdAt={analysis.created_at}
       />
     </>
   );
