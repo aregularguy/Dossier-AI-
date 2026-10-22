@@ -1,3 +1,6 @@
+import logging
+from uuid import uuid4
+
 from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
 
 from models.schemas import IngestResponse
@@ -7,6 +10,8 @@ from services.pdf_extractor import PDFExtractor
 from services.vector_store import VectorStore
 
 router = APIRouter()
+
+logger = logging.getLogger(__name__)
 
 
 @router.post("/ingest", response_model=IngestResponse)
@@ -38,17 +43,20 @@ async def ingest_document(
             detail="No text found in PDF. Scanned/image PDFs are not supported.",
         )
 
-    # 2. Upload to Supabase Storage
-    storage_path = f"{user_id}/{file.filename}"
+    # 2. Upload to Supabase Storage.
+    # The uuid prefix keeps two uploads of the same filename from overwriting
+    # each other, so each document row points at its own object.
+    storage_path = f"{user_id}/{uuid4()}-{file.filename}"
     store = VectorStore()
     try:
         store.client.storage.from_("resumes").upload(
             storage_path,
             pdf_bytes,
-            {"content-type": "application/pdf", "upsert": "true"},
+            {"content-type": "application/pdf", "upsert": "false"},
         )
     except Exception:
-        pass  # File may already exist
+        logger.exception("Failed to upload %s to storage", storage_path)
+        raise HTTPException(status_code=500, detail="Failed to store file")
 
     # 3. Create document record
     doc = store.insert_document(

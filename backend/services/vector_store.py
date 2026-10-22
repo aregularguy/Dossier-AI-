@@ -1,6 +1,10 @@
+import logging
+
 from supabase import create_client, Client
 
 from config import settings
+
+logger = logging.getLogger(__name__)
 
 
 class VectorStore:
@@ -83,7 +87,27 @@ class VectorStore:
         return result.data
 
     def delete_document(self, doc_id: str, user_id: str):
-        """Delete a document and its chunks (CASCADE handles chunks)."""
+        """Delete a document, its stored PDF and its chunks (CASCADE handles chunks)."""
+        # Read the storage path before the row is gone, otherwise the PDF is
+        # orphaned in the bucket with nothing left pointing at it.
+        existing = (
+            self.client.table("documents")
+            .select("storage_path")
+            .eq("id", doc_id)
+            .eq("user_id", user_id)
+            .execute()
+        )
+
+        storage_path = existing.data[0]["storage_path"] if existing.data else None
+
+        if storage_path:
+            try:
+                self.client.storage.from_("resumes").remove([storage_path])
+            except Exception:
+                # The row is still worth deleting even if the object is already
+                # gone or the bucket call fails; log and continue.
+                logger.exception("Failed to remove stored file %s", storage_path)
+
         (
             self.client.table("documents")
             .delete()
