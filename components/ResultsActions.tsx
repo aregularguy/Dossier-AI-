@@ -25,7 +25,7 @@ export function ResultsActions() {
         component={Link}
         href="/analyze"
         variant="filled"
-        color="brand"
+        color="ink"
         size="md"
       >
         Analyze another

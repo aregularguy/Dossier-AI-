@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import {
   Stack,
   TextInput,
-  Button,
   Text,
   Paper,
   Group,
@@ -158,7 +157,7 @@ export default function AskChat() {
       >
         <Stack align="center" gap="xs" py="md" style={{ pointerEvents: 'none' }}>
           <Dropzone.Accept>
-            <IconUpload size={28} color="#4338ca" />
+            <IconUpload size={28} color="#101217" />
           </Dropzone.Accept>
           <Dropzone.Reject>
             <IconFileX size={28} color="#e03131" />
@@ -185,7 +184,7 @@ export default function AskChat() {
             <Paper key={doc.id} withBorder p="sm" radius="md">
               <Group justify="space-between" wrap="nowrap">
                 <Group gap="sm" wrap="nowrap">
-                  <IconFile size={18} color="#4338ca" />
+                  <IconFile size={18} color="#101217" />
                   <div>
                     <Text size="sm" fw={500} truncate maw={250}>
                       {doc.filename}
@@ -237,14 +236,14 @@ export default function AskChat() {
                       width: 28,
                       height: 28,
                       borderRadius: 8,
-                      backgroundColor: '#eef2ff',
+                      backgroundColor: '#EFF3F6',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       flexShrink: 0,
                     }}
                   >
-                    <IconUser size={15} color="#4338ca" />
+                    <IconUser size={15} color="#101217" />
                   </div>
                   <Text size="sm" fw={500} c="dark.8" pt={3}>
                     {msg.content}
@@ -300,7 +299,7 @@ export default function AskChat() {
                               <Badge
                                 size="xs"
                                 variant="light"
-                                color="brand"
+                                color="ink"
                                 radius="sm"
                               >
                                 {msg.sources.length}
@@ -350,7 +349,7 @@ export default function AskChat() {
           {loading && (
             <div style={{ padding: '20px 0' }}>
               <Group gap="sm" pl={40}>
-                <Loader size={16} color="brand" type="dots" />
+                <Loader size={16} color="ink" type="dots" />
                 <Text size="sm" c="dimmed">
                   Searching documents...
                 </Text>
@@ -390,7 +389,7 @@ export default function AskChat() {
           <ActionIcon
             size={36}
             radius="md"
-            color="brand"
+            color="ink"
             variant={input.trim() ? 'filled' : 'subtle'}
             onClick={handleAsk}
             disabled={!input.trim() || loading || documents.length === 0}
